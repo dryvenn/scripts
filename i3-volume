@@ -1,0 +1,41 @@
+#!/bin/bash
+
+if [ "$#" -ne 1 ]; then
+	cat <<-EOF
+	Usage: $0 <minus|plus|mute|unmute|toggle>
+	EOF
+	exit 1
+fi
+
+case $1 in
+	"minus")
+		amixer set Master 5%- > /dev/null
+		;;
+	"plus")
+		amixer set Master 5%+ > /dev/null
+		;;
+	"mute")
+		amixer set Master mute > /dev/null
+		;;
+	"unmute")
+		amixer set Master unmute > /dev/null
+		amixer set Headphone unmute > /dev/null
+		amixer set Speaker unmute > /dev/null
+		amixer set Front unmute > /dev/null
+		amixer set Surround unmute > /dev/null
+		amixer set Center unmute > /dev/null
+		amixer set LFE unmute > /dev/null
+		amixer set Side unmute > /dev/null
+		;;
+	"toggle")
+		if [ "$(amixer get Master | grep -c 'off')" != "0" ]; then
+			$0 unmute
+		else
+			$0 mute
+		fi
+		;;
+	*)
+		echo "Unknown command"
+		exit 1
+		;;
+esac

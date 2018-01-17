@@ -1,0 +1,21 @@
+#!/bin/bash
+
+grepper=grep
+type ag &> /dev/null && grepper='ag -s'
+
+if [ $# -eq 1 ]
+then
+	$grepper -rl $1 .
+elif [ $# -eq 2 ]
+then
+	for f in $($grepper -rl $1 .)
+	do
+		sed -i "s/$1/$2/g" $f
+	done
+else
+	1>&2 cat <<-EOF
+	Usage: > $0 <old> [new]
+	Replaces occurences of 'old' by 'new'.
+	Displays list of affected files if 'new' is not specified.
+	EOF
+fi

@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+set -e
+
+file=/tmp/lockscreen.png
+ratio=4
+
+# Take a screenshot
+scrot $file
+
+# Pixelize it
+mogrify -scale $((100 / $ratio))% -scale $((100 * $ratio))% $file
+
+# Lock the screen
+i3lock -e -f -i $file

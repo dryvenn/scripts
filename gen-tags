@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+# set -o xtrace
+
+
+ctags -R $@
+
+cscope_dirs=""
+for dir in $@
+do
+	cscope_dirs="$cscope_dirs -s$dir"
+done
+cscope -R -q -u -b $cscope_dirs
