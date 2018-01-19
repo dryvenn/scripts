@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+# set -o xtrace
+
+WD=$(pwd)
+SD=$(dirname $(readlink -e $0))
+
+err() {
+	1>&2 echo "$*"
+}
+
+usage() {
+	1>&2 cat <<- EOF
+	Usage: > $(basename $0) <url> [git-svn param]...
+	EOF
+	exit 1
+}
+[ $# -lt 1 ] && usage
+
+URL=$1
+
+rev=$(svn info $URL | grep -i revision | head -n 1 | cut -d ':' -f 2)
+git svn clone -r$(($rev)):HEAD $URL ${@:2}
