@@ -19,3 +19,4 @@ usage() {
 	EOF
 	exit 1
 }
+[ $# -ne 0 ] && usage
