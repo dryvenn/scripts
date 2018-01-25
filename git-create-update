@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+# set -o xtrace
+
+err() {
+	1>&2 echo "$*"
+}
+
+usage() {
+	1>&2 cat <<- EOF
+	Usage: > $(basename $0) [dir] [url]
+	EOF
+	exit 1
+}
+dir=${1:-.}
+url=${2:-}
+
+if [ -d "$dir" ]
+then
+	if [ -n "$url" ] && ! git -C "$dir" remote -v 2>/dev/null | grep -q "$url"
+	then
+		err "$dir doesn't have $url as remote"
+		exit 2
+	fi
+	cd $dir
+	stash=$(git stash create -kua)
+	git reset --hard
+	git pull --rebase origin master
+	git submodule update --init
+	if [ -n "$stash" ]
+	then
+		git stash apply $stash
+	fi
+elif [ ! -e "$dir" ]
+then
+	if [ -z "$url" ]
+	then
+		err "$dir doesn't exist and needs an url"
+		exit 2
+	fi
+	git clone --depth 1 --recursive "$url" "$dir"
+else
+	usage
+fi
