@@ -8,8 +8,6 @@ set -o pipefail
 
 for host in $@
 do
-	rsync -azh ~/.config $host:
-	rsync -azh ~/.scripts $host:
-	rsync -azh ~/.*_local $host:
-	ssh $host .config/install
+	ssh $host 'curl https://raw.githubusercontent.com/dryvenn/config/master/_install | bash'
+	ssh $host 'curl https://raw.githubusercontent.com/dryvenn/scripts/master/_install | bash'
 done
