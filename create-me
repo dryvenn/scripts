@@ -1,5 +1,17 @@
 #!/usr/bin/env bash
 
+apt update && apt install -y \
+	bash \
+	curl \
+	git \
+	htop \
+	tmux \
+	vim \
+	xonsh
+
+# for kakoune
+apt install -y make gcc libncursesw5-dev pkg-config asciidoc
+
 useradd -m yves
 echo "yves:yves" | chpasswd
 chsh yves -s /bin/bash
