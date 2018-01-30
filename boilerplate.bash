@@ -4,7 +4,7 @@ set -o errexit
 set -o errtrace
 set -o nounset
 set -o pipefail
-# set -o xtrace
+#set -o xtrace
 
 WD=$(pwd)
 SD=$(dirname $(readlink -e $0))
