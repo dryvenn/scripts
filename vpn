@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+# set -o xtrace
+
+WD=$(pwd)
+SD=$(dirname $(readlink -e $0))
+
+err() {
+	1>&2 echo "$*"
+}
+
+usage() {
+	1>&2 cat <<- EOF
+	Usage: > $(basename $0) <dir>
+	Start OpenVPN with the config located in 'dir'.
+	Run me as root.
+	EOF
+	exit 1
+}
+[ $# -ne 1 ] && usage
+[ ! -d $1 ] && usage
+
+config=$(find $(readlink -e $1) -name '*.ovpn' -or -name '*.conf' -or -name '*.config')
+if [ $(echo "$config" | wc -l) -ne 1 ]
+then
+	err "No single configuration found in $1"
+	exit 1
+fi
+
+killall -9 openvpn &> /dev/null || true
+openvpn --daemon --cd $(dirname $config) --config $(basename $config)
