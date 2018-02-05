@@ -20,6 +20,7 @@ gpasswd -a yves tty
 gpasswd -a yves dialout
 gpasswd -a yves plugdev
 yes '' | su yves -c 'ssh-keygen'
+cp -a ~yves/.ssh/id_rsa.pub ~yves/.ssh/authorized_keys
 su yves -c 'curl https://raw.githubusercontent.com/dryvenn/scripts/master/push-conf | bash -s localhost'
 
 echo "Done. Don't forget to change your password."
