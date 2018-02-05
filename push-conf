@@ -8,6 +8,6 @@ set -o pipefail
 
 for host in $@
 do
-	ssh $host 'curl https://raw.githubusercontent.com/dryvenn/config/master/_install | bash'
-	ssh $host 'curl https://raw.githubusercontent.com/dryvenn/scripts/master/_install | bash'
+	ssh -o StrictHostKeyChecking=no $host 'curl https://raw.githubusercontent.com/dryvenn/config/master/_install | bash'
+	ssh -o StrictHostKeyChecking=no $host 'curl https://raw.githubusercontent.com/dryvenn/scripts/master/_install | bash'
 done
