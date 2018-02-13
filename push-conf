@@ -4,10 +4,14 @@ set -o errexit
 set -o errtrace
 set -o nounset
 set -o pipefail
-# set -o xtrace
+#set -o xtrace
+
+cd ~
 
 for host in $@
 do
-	ssh -o StrictHostKeyChecking=no $host 'curl https://raw.githubusercontent.com/dryvenn/config/master/_install | bash'
-	ssh -o StrictHostKeyChecking=no $host 'curl https://raw.githubusercontent.com/dryvenn/scripts/master/_install | bash'
+	rsync -avzh .config $host:
+	rsync -avzh .scripts $host:
+	rsync -avzh .*_local $host:
+	ssh $host .config/install
 done
