@@ -20,3 +20,19 @@ usage() {
 	exit 1
 }
 [ $# -ne 0 ] && usage
+
+example=false
+while [ $# -gt 0 ]
+do
+	case "$1" in
+		--example)
+			example=true
+			shift
+			;;
+		-*)
+			usage
+			;;
+		*)
+			;;
+	esac
+done
