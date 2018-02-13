@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+#set -o xtrace
+
+usage() {
+	1>&2 cat <<- EOF
+	Usage: > $(basename $0)
+	EOF
+	exit 1
+}
+[ $# -ne 0 ] && usage
+
+kak=$(readlink -e $(which kak))
+kak_repo=$(git -C $(dirname $kak) rev-parse --show-toplevel)
+cd $kak_repo
+
+git fetch origin
+git log master...origin/master
+git pull origin master
+make -C src/ -j$(nproc)
