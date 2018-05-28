@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+#set -o xtrace
+
+WD=$(pwd)
+SD=$(dirname $(readlink -e $0))
+
+err() {
+	1>&2 echo "$*"
+}
+
+usage() {
+	1>&2 cat <<- EOF
+	Usage: > $(basename $0) [output] [rootfs] [uImage] [--clean]
+	EOF
+	exit 1
+}
+[ $# -eq 0 ] && usage
+
+clean=false
+output=
+rootfs=
+linux=
+while [ $# -gt 0 ]
+do
+	case "$1" in
+		--clean)
+			clean=true
+			shift
+			;;
+		-*)
+			usage
+			;;
+		*)
+			if [ ! "$output" ]
+			then
+				output=$(readlink -e $1)
+				[ ! -d "$output" ] && usage
+			elif [ ! "$rootfs" ]
+			then
+				rootfs=$(readlink -e $1)
+				[ ! -d "$rootfs" ] && usage
+			elif [ ! "$linux" ]
+			then
+				linux=$(readlink -e $1)
+				[ ! -e "$linux" ] && usage
+			else
+				usage
+			fi
+			shift
+			;;
+	esac
+done
+( [ ! "$output" ] || [ ! "$rootfs" ] || [ ! "$linux" ] ) && usage
+
+if $clean
+then
+	sudo rm -fr $rootfs
+fi
+
+sudo mkdir -p $rootfs
+sudo tar -x -v -f $output/images/rootfs.tar -C $rootfs
+
+sudo cp $output/images/uImage* $linux
