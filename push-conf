@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+#set -o xtrace
+
+rsync() {
+	$(which rsync) -avzh --exclude='.git/' --delete $@
+}
+
+cd ~
+
+for host in $@
+do
+	# Update the config files
+	ssh $host .config/install
+	# Send additional data
+	rsync .scripts $host:
+	rsync .ssh $host:
+	rsync .*_local $host:
+done
