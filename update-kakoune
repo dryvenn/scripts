@@ -21,4 +21,4 @@ cd $kak_repo
 git fetch origin
 git log master...origin/master
 git pull origin master
-make -C src/ -j$(nproc)
+debug=yes make -C src/ -j$(nproc)
