@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+#set -o xtrace
+
+blue() {
+	echo -e "\e[1m\e[34m$@\e[0m"
+}
+
+for dir in $(ls -d */.git | xargs dirname)
+do
+	pushd $dir &> /dev/null
+	blue "[$dir]"
+	git $@
+	popd &> /dev/null
+done
