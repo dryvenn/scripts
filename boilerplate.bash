@@ -9,12 +9,17 @@ set -o pipefail
 WD=$(pwd)
 SD=$(dirname $(readlink -e $0))
 
-err() {
+error() {
 	1>&2 echo "$*"
 }
 
+fatal() {
+	error $@
+	exit 255
+}
+
 usage() {
-	1>&2 cat <<- EOF
+	1>&2 cat <<-EOF
 	Usage: > $(basename $0) ...
 	EOF
 	exit 1
