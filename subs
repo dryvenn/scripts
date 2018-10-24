@@ -10,7 +10,7 @@ elif [ $# -eq 2 ]
 then
 	for f in $($grepper -rl "$1" .)
 	do
-		sed -i "s/$1/$2/g" $f
+		sed -i "s%$1%$2%g" $f
 	done
 else
 	1>&2 cat <<-EOF
