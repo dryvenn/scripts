@@ -10,10 +10,14 @@ blue() {
 	echo -e "\e[1m\e[34m$@\e[0m"
 }
 
+error=0
+
 for dir in $(ls -d */.git | xargs dirname)
 do
 	pushd $dir &> /dev/null
 	blue "[$dir]"
-	git $@
+	git $@ || error=$?
 	popd &> /dev/null
 done
+
+exit $error
