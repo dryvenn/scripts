@@ -19,6 +19,6 @@ kak_repo=$(git -C $(dirname $kak) rev-parse --show-toplevel)
 cd $kak_repo
 
 git fetch origin
-git log master...origin/master
-git pull origin master
-debug=yes make -C src/ -j$(nproc)
+tag=$(git tag | grep -E 'v[[:digit:]]{4}\.[[:digit:]]{2}\.[[:digit:]]{2}' | tail -n 1)
+git checkout $tag
+debug=no version=$(git describe --tags HEAD) make -C src/ -j$(nproc)
