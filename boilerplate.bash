@@ -9,12 +9,12 @@ set -o pipefail
 WD=$(pwd)
 SD=$(dirname $(readlink -e $0))
 
-error() {
-	1>&2 echo "$*"
+log() {
+	1>&2 echo "$@"
 }
 
 fatal() {
-	error $@
+	test $# -eq 0 || log "$@"
 	exit 255
 }
 
